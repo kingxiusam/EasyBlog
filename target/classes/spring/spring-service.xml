@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+<!--该spring配置文件整合了transaction（事务）和Service（服务组件）配置-->
+
+    <!--注册UserService,业务类中通过Autowired自动注入-->
+    <bean id="userService" class="com.huangdong.service.mybatis.UserService" scope="singleton"/>
+    <bean id="logService" class="com.huangdong.service.mybatis.LogService" scope="singleton"/>
+    <bean id="topicService" class="com.huangdong.service.mybatis.TopicService" scope="singleton"/>
+    <bean id="boardService" class="com.huangdong.service.mybatis.BoardService" scope="singleton"/>
+    <bean id="postService" class="com.huangdong.service.mybatis.PostService" scope="singleton"/>
+    <!-- 扫描com.huangdong.service相应包下所有标注@Service的服务组件 -->
+    <context:component-scan base-package="com.huangdong.service.mybatis"/>
+    <context:component-scan base-package="com.huangdong.service.email"/>
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource" />
+
+    <!--使用强大的切点表达式语言轻松定义目标方法-->
+    <aop:config>
+        <!--通过aop定义事务增强切面-->
+        <aop:pointcut id="serviceMethod"
+                      expression="execution(* com.huangdong.service.mybatis.*Service.*(..))" />
+        <!--引用事务增强-->
+        <aop:advisor pointcut-ref="serviceMethod" advice-ref="txAdvice" />
+    </aop:config>
+
+    <!--事务增强-->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!--事务属性定义-->
+        <tx:attributes>
+            <tx:method name="*" />
+        </tx:attributes>
+    </tx:advice>
+    <!-- 基于EHCache的系统缓存管理器-->
+    <!--<bean id="cacheManager"-->
+          <!--class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"-->
+          <!--p:configLocation="classpath:ehcache.xml"/>-->
+
+</beans>

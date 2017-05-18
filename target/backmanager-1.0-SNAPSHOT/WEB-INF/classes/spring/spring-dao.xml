@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config></context:annotation-config>
+    <!--自动扫描 @dao  -->
+    <context:component-scan base-package="com.huangdong.dao.mybatis"/>
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--配置dbcp数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--定义初始连接数-->
+        <property name="initialSize" value="${jdbc.initialSize}"/>
+        <!--定义最大连接数-->
+        <property name="maxActive" value="${jdbc.maxActive}"/>
+        <!--定义最大空闲-->
+        <!--<property name="maxIdle" value="${jdbc.maxIdle}"/>-->
+        <!--&lt;!&ndash;定义最小空闲&ndash;&gt;-->
+        <!--<property name="minIdle" value="${jdbc.minIdle}"/>-->
+        <!--最长等待时间-->
+        <property name="maxWait" value="${jdbc.maxWait}"/>
+    </bean>
+
+
+
+    <!-- mybatis和spring完美整合，不需要mybatis配置映射文件 -->
+
+
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean"
+          p:dataSource-ref="dataSource"
+          p:configLocation="classpath:myBatis-config.xml"
+          p:mapperLocations="classpath:mapper/*.xml"/>
+
+
+    <!--配置访问数据库的模板类，需要注入工产依赖-->
+    <!--<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">-->
+    <!--<constructor-arg ref="sqlSessionFactory"/>-->
+    <!--</bean>-->
+
+    <!--直接将映射接口(dao接口）实例化为bean，在service类中注入-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"
+          p:sqlSessionFactoryBeanName="sqlSessionFactory"
+          p:basePackage="com.huangdong.dao.inte"
+    />
+
+
+</beans>

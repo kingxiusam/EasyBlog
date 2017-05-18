@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: spy:spymemcached:2.8.12">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.m2/repository/spy/spymemcached/2.8.12/spymemcached-2.8.12.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.m2/repository/spy/spymemcached/2.8.12/spymemcached-2.8.12-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.m2/repository/spy/spymemcached/2.8.12/spymemcached-2.8.12-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
