@@ -1,1 +1,0 @@
-JSONString 必须在JQuery的处理下ＪＳＯＮ.parse(data) 转换成 JSON对象
